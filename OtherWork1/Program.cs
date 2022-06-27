@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace OtherWork1
 {
     class Program
     {
         static void Main(string[] args)
-        {  
-            string InputString(string str)
+        {            
+            int i = 0;
+            string[,] login = new string[100, 2];
+            for (int j = 0; j < login.GetLength(0); j++)
             {
-                Console.Write(str);
-                return Console.ReadLine();
+                login[j, 0] = "";
             }
 
             Console.WriteLine("Введите номер дополнительной задачи:");
             Console.WriteLine("1: В переменной string есть секретное сообщение, во второй есть пароль. Пользователю программы даётся 3 попытки ввести пароль и увидеть секретное сообщение.");
-            Console.WriteLine("2: Есть программа с бесконечным циклом. Когда пользователь вводит exit программа заканчивается.");
+            Console.WriteLine("2: Gрограмма с бесконечным циклом. Дополнение"); 
             int task = Convert.ToInt32(InputString(""));
+            Console.Clear();
             switch (task)
             {
                 case 1:
@@ -24,8 +28,7 @@ namespace OtherWork1
                     string password, cycle;
                     int count = 0;
                     do
-                    {
-                        Console.Clear();
+                    {                       
                         if (count > 0)
                         {
                             Console.WriteLine("Пароль неверный!");
@@ -44,19 +47,76 @@ namespace OtherWork1
                         Console.WriteLine("Пароль принят");
                     }
                     break;
-                case 2:                   
+                case 2:
                     do
                     {
-                        Console.Clear();
-                        Console.WriteLine("Вы не пройдёте дальше, пока не введете exit");
-                        cycle = InputString("Введите строку: ");
-                    } while (cycle != "exit");
-                    Console.WriteLine("Вы справились");
+                        Console.WriteLine("В программу добавлены некоторые команды, для просмотра введите Help");
+                        cycle = InputString("Введите команду: ");                        
+                        switch (cycle)
+                        {
+                            case "Help":
+                                Console.WriteLine("Help – вывести список команд");
+                                Console.WriteLine("Clear - Отчистить поле");
+                                Console.WriteLine("SetName – Установить имя");
+                                Console.WriteLine("SetPassword – Установить пароль");
+                                Console.WriteLine("WriteName – вывести имя после ввода пароля");
+                                Console.WriteLine("Exit – выход");
+                                    break;
+                            case "Clear":
+                                Console.Clear();
+                                break;
+                            case "SetName":                                 
+                                login[i, 0] = InputString("Введите имя: ");
+                                break;
+                            case "SetPassword":
+                                if (login[i, 0] != "")
+                                {
+                                    login[i, 1] = InputString("Введите пароль: ");
+                                    i++;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Для данной операции установите имя");
+                                }
+                                break;
+                            case "WriteName":
+                                password = InputString("Введите пароль: ");
+                                for (int j = 0; j <= i; j++)
+                                {
+                                    if (login[j,1] == password)
+                                    {
+                                        Console.WriteLine(login[j,0]);
+                                        break;
+                                    }
+                                    if (j == i)
+                                    {
+                                        Console.WriteLine("Имени с таким паролем несуществует");
+                                    }
+                                }
+                                break;
+                            case "AdminHelper":
+                                for (int j = 0; j <= i; j++)
+                                {
+                                    Console.WriteLine($"{login[j,0]} - {login[j, 1]}");
+                                }
+                                break;
+
+                        }
+
+                        Console.WriteLine();
+
+                    } while (cycle != "Exit");
 
                     break;
             }
 
             Console.ReadKey();
+
+            string InputString(string str)
+            {
+                Console.Write(str);
+                return Console.ReadLine();
+            }
         }
     }
 }
